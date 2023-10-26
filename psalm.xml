@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<psalm
+    errorLevel="4"
+    resolveFromConfigFile="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    findUnusedBaselineEntry="true"
+    findUnusedCode="true"
+>
+    <projectFiles>
+        <directory name="app"/>
+        <directory name="database/factories"/>
+        <directory name="database/seeders"/>
+        <ignoreFiles>
+            <directory name="vendor"/>
+        </ignoreFiles>
+    </projectFiles>
+    <plugins>
+        <pluginClass class="Psalm\LaravelPlugin\Plugin"/>
+    </plugins>
+    <issueHandlers>
+        <UndefinedInterfaceMethod>
+            <errorLevel type="suppress">
+                <referencedMethod name="Illuminate\Contracts\Routing\ResponseFactory::error" />
+                <referencedMethod name="Illuminate\Contracts\Routing\ResponseFactory::api" />
+            </errorLevel>
+        </UndefinedInterfaceMethod>
+        <PossiblyUnusedMethod>
+            <errorLevel type="suppress">
+                <directory name="app/Console/Commands"/>
+                <directory name="app/Http/Requests"/>
+                <directory name="database/seeders"/>
+            </errorLevel>
+        </PossiblyUnusedMethod>
+        <UnusedClass>
+            <errorLevel type="suppress">
+                <directory name="database/seeders"/>
+                <directory name="database/factories"/>
+                <directory name="app/Http/Controllers"/>
+            </errorLevel>
+        </UnusedClass>
+    </issueHandlers>
+</psalm>
