@@ -1,0 +1,14 @@
+[
+    {
+        "name": "author",
+        "description": "Ordinary NOT BANNED user of library"
+    },
+    {
+        "name": "publisher",
+        "description": "Author with permission to publish his works"
+    },
+    {
+        "name": "admin",
+        "description": "Library's admin"
+    }
+]

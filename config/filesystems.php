@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -56,6 +58,11 @@ return [
             'throw' => false,
         ],
 
+        'test' => [
+            'driver' => 'local',
+            'root' => storage_path('app/temp'),
+            'throw' => false,
+        ],
     ],
 
     /*
