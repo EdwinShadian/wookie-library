@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Internal\Book;
 
+use App\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BookUpdateRequest extends FormRequest
@@ -13,7 +14,7 @@ class BookUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->hasRole('publisher');
+        return auth()->user()->hasRole(Role::ROLE_PUBLISHER, Role::ROLE_ADMIN);
     }
 
     /**
