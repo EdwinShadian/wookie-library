@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Response;
+use Log;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -23,8 +27,10 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (Throwable $e): Response {
+            Log::error(json_encode($e, JSON_FORCE_OBJECT));
+
+            return response()->error($e);
         });
     }
 }

@@ -1,66 +1,101 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Test Task "Wookie Library"
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Summary
 
-## About Laravel
+### Description
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This is a backend library application. It can provide both public and internal APIs for customers and authors. It uses JWT authorization and user's roles for permissions. Also it has some administrative features (you will see their description below).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Used technologies
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+    - PHP 8.1
+    - Laravel 10
+    - Laravel Sail
+    - Postgres 15
+    - Docker
 
-## Learning Laravel
+Also I used **Psalm**, **PHPUnit** and **PHP CS Fixer** as a code quality tools.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## How to deploy project locally
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+You need Docker and Linux/WSL for the deployment.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. First of all you need to copy *.env.example* to *.env*:
 
-## Laravel Sponsors
+    ```shell
+    cp .env.example .env
+    ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+    This file is almost ready for the local deployment. It will have its changes automatically on next step.
 
-### Premium Partners
+2. Now you need to start docker containers:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+    ```shell
+    docker compose up -d --build
+    ```
 
-## Contributing
+3. When containers are started, you can init application using **Make**:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    ```shell
+    docker exec -it wookie-library-app-1 make
+    ```
 
-## Code of Conduct
+    **Make** will automatically procced through all steps which application is needed. Also it seeds some preinstall users and roles for them.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+4. Now you're ready for a testing! You can start tests using command:
 
-## Security Vulnerabilities
+    ```shell
+    docker exec -it wookie-library-app-1 vendor/bin/phpunit tests
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    Also you can add some books to the library using command:
 
-## License
+    ```shell
+    docker exec -it wookie-library-app-1 php artisan app:get-books <number of books>
+    ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    It can take some time if you want thousands of books at once.
+
+### API routes
+
+Below I will use *italic* for non-required params and **bold** for required ones.
+
+1. **Auth and registration**
+    - **POST** /api/auth/login - login to the system and take your JWT token
+        - **author_pseudonym** - as a name
+        - **password**
+    - **POST** /api/auth/register - create a new user with *Author* role (about roles below)
+        - **name** - author's name
+        - **author_pseudonym** - nickname for the author. Must be unique
+        - **password**
+    - **GET** /api/auth/me - provide user details about himself
+    - **POST** /api/auth/logout - logout from system
+    - **POST** /api/auth/refresh - refresh your token before it expires
+
+2. **Public API** (it doesn't require any authorization, but it's functionality is limited)
+    - **GET** /api/public/books - get paginated list of books
+        - *q* - search query (only for book's title)
+        - *perPage* - a number of books on a single page
+        - *page* - a number of page you want to get
+    - **GET** /api/public/books/{id} - get book's details
+
+3. **Internal API** (it provides a basic CRUD operations for authors)
+    - **GET** /api/internal/books - get paginated list of books. It works just as a public one
+    - **GET** /api/internal/books/{id} - get book's details. It works just as a public one
+    - **POST** /api/internal/books - publish new book to the library. You need to be a *Publisher*
+        - **title** - title for a book
+        - **description** - short book's summary
+        - **price** - book's price
+        - *author* - original author of the book. If it wasn't provide then the author is you
+        - *cover* - .jpg or .png image for the cover
+    - **PUT/PATCH** /api/internal/books/{id} - update book's properties. You need to be a *Publisher* of this book or an *Admin*. List of parameters is the same as for the publishing.
+    - **DELETE** /api/internal/books/{id} - unpublish book from the library. You need to be a *Publisher* of this book or an *Admin*.
+
+4. **Admin API** (it provides some admin features such as role change, scrolling users list, ban user from using internal API)
+    - **GET** /api/admin/users - get paginated list of users
+        - *perPage* - a number of books on a single page
+        - *page* - a number of page you want to get
+    - **POST** /api/admin/roles - change user's roles
+        - **user_id** - user's id
+        - **roles** - an array with roles' names which you want to give to the user. User can be an **admin**, an **author** (he's a basic user of internal API) and a **publisher** (he has permissions to publish, update and delete books, but only those which related to him).
+    - **POST** /api/admin/ban/{user_id} - to ban user = to take off his roles and rights for using internal API

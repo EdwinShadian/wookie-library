@@ -22,23 +22,46 @@
     <issueHandlers>
         <UndefinedInterfaceMethod>
             <errorLevel type="suppress">
-                <referencedMethod name="Illuminate\Contracts\Routing\ResponseFactory::error" />
-                <referencedMethod name="Illuminate\Contracts\Routing\ResponseFactory::api" />
+                <referencedMethod name="Illuminate\Contracts\Routing\ResponseFactory::error"/>
+                <referencedMethod name="Illuminate\Contracts\Routing\ResponseFactory::api"/>
+                <referencedMethod name="Illuminate\Contracts\Routing\ResponseFactory::withToken"/>
+                <referencedMethod name="Illuminate\Contracts\Filesystem\Filesystem::url"/>
+                <referencedMethod name="Illuminate\Contracts\Filesystem\Filesystem::putFile"/>
+                <referencedMethod name="Illuminate\Contracts\Auth\Guard::factory"/>
+                <referencedMethod name="Illuminate\Contracts\Auth\Authenticatable::hasRole"/>
             </errorLevel>
         </UndefinedInterfaceMethod>
         <PossiblyUnusedMethod>
             <errorLevel type="suppress">
                 <directory name="app/Console/Commands"/>
                 <directory name="app/Http/Requests"/>
+                <directory name="app/Http/Middleware"/>
                 <directory name="database/seeders"/>
+                <file name="app/Service/Book/BookService.php"/>
             </errorLevel>
         </PossiblyUnusedMethod>
+        <PossiblyUnusedProperty>
+            <errorLevel type="suppress">
+                <directory name="app/Http/Middleware"/>
+            </errorLevel>
+        </PossiblyUnusedProperty>
         <UnusedClass>
             <errorLevel type="suppress">
+                <directory name="app/Console/Commands"/>
                 <directory name="database/seeders"/>
                 <directory name="database/factories"/>
                 <directory name="app/Http/Controllers"/>
             </errorLevel>
         </UnusedClass>
+        <UnusedClosureParam>
+            <errorLevel type="suppress">
+                <directory name="app/Providers"/>
+            </errorLevel>
+        </UnusedClosureParam>
+        <NoInterfaceProperties>
+            <errorLevel type="suppress">
+                <directory name="app"/>
+            </errorLevel>
+        </NoInterfaceProperties>
     </issueHandlers>
 </psalm>
